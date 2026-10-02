@@ -4,8 +4,8 @@ import org.eclipse.cargotracker.interfaces.booking.facade.BookingServiceFacade;
 import org.eclipse.cargotracker.interfaces.booking.facade.dto.CargoRoute;
 import org.eclipse.cargotracker.interfaces.booking.facade.dto.Location;
 import org.eclipse.cargotracker.interfaces.booking.facade.dto.RouteCandidate;
-import org.primefaces.PrimeFaces;
 import org.junit.Test;
+import org.primefaces.PrimeFaces;
 
 import java.lang.reflect.Field;
 import java.text.ParseException;
@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
@@ -47,7 +48,24 @@ public class ChangeArrivalDeadlineDateTest {
             assertEquals("Unable to parse arrival deadline date for cargo ABC123",
                     e.getMessage());
             assertEquals(ParseException.class, e.getCause().getClass());
-            assertEquals(null, editor.getArrivalDeadlineDate());
+            assertNull(editor.getArrivalDeadlineDate());
+        }
+    }
+
+    @Test
+    public void loadRejectsMissingCargoDeadline() {
+        RecordingBookingServiceFacade facade = new RecordingBookingServiceFacade(
+                cargoRoute(null));
+        ChangeArrivalDeadlineDate editor = editor(facade);
+        editor.setTrackingId("ABC123");
+
+        try {
+            editor.load();
+            fail("Expected missing deadline to be rejected");
+        } catch (IllegalStateException e) {
+            assertEquals("Unable to parse arrival deadline date for cargo ABC123",
+                    e.getMessage());
+            assertNull(editor.getArrivalDeadlineDate());
         }
     }
 
@@ -60,17 +78,22 @@ public class ChangeArrivalDeadlineDateTest {
         editor.setTrackingId("ABC123");
         editor.setArrivalDeadlineDate(selectedDate);
         facade.failureOnChange = new RuntimeException("expected facade failure");
+        RecordingPrimeFaces primeFaces = new RecordingPrimeFaces();
+        PrimeFaces.setCurrent(primeFaces);
 
         try {
             editor.changeArrivalDeadline();
             fail("Expected facade failure");
         } catch (RuntimeException e) {
             assertSame(facade.failureOnChange, e);
+        } finally {
+            PrimeFaces.setCurrent(null);
         }
 
         assertEquals("ABC123", facade.changedTrackingId);
         assertSame(selectedDate, facade.changedDeadline);
         assertEquals(1, facade.changeDeadlineCalls);
+        assertNull(primeFaces.closedWith);
     }
 
     @Test

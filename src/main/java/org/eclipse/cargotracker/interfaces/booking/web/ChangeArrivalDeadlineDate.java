@@ -49,10 +49,16 @@ public class ChangeArrivalDeadlineDate implements Serializable {
         cargo = bookingServiceFacade.loadCargoForRouting(trackingId);
         arrivalDeadlineDate = null;
 
+        String formattedDeadline = cargo == null ? null : cargo.getArrivalDeadline();
+        if (formattedDeadline == null) {
+            throw new IllegalStateException(
+                    "Unable to parse arrival deadline date for cargo " + trackingId);
+        }
+
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         formatter.setLenient(false);
         try {
-            arrivalDeadlineDate = formatter.parse(cargo.getArrivalDeadline());
+            arrivalDeadlineDate = formatter.parse(formattedDeadline);
         } catch (ParseException e) {
             throw new IllegalStateException(
                     "Unable to parse arrival deadline date for cargo " + trackingId, e);
