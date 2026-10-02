@@ -37,6 +37,7 @@ public class DefaultBookingServiceFacade implements BookingServiceFacade,
     @Inject
     private VoyageRepository voyageRepository;
 
+    // Preserve CDI's public no-argument construction path.
     public DefaultBookingServiceFacade() {
     }
 
