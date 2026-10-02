@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "campaignId": "1d733d7b-7520-4cd0-8454-766cc287a272",
+  "campaignIssueNumber": 1,
+  "campaignShortname": "arrival-deadline-control",
+  "repository": "edburns/dd-3072680-cargotracker-non-devoxx-fixture",
+  "baseBranch": "experiment/shepherd-control",
+  "lessonPropagation": "off",
+  "campaignMetadataDirectory": "1-arrival-deadline-control-remove-before-merge",
+  "lessonsFile": "campaign-lessons.md",
+  "createdBy": {
+    "shepherdTaskVersion": "1.0.4",
+    "stageOutcomeProtocolVersion": 1
+  },
+  "createdAt": "2026-10-02T11:05:41Z"
+}
