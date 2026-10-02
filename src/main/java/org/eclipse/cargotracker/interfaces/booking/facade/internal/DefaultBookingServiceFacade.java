@@ -40,6 +40,7 @@ public class DefaultBookingServiceFacade implements BookingServiceFacade,
     public DefaultBookingServiceFacade() {
     }
 
+    // Used only for container-free changeDeadline delegation tests.
     DefaultBookingServiceFacade(BookingService bookingService) {
         this.bookingService = bookingService;
     }
